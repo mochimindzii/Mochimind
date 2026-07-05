@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MochiMind</title>
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js?v=button-behavior-1" defer></script>
+</head>
+<body>
+  <div class="toast" data-toast hidden></div>
+  <header class="site-header" id="home">
+    <nav class="topbar" aria-label="Primary navigation">
+      <a class="brand" href="#home" aria-label="MochiMind home">
+        <img src="assets/favicon.png" alt="">
+        <span>
+          <strong>MochiMind</strong>
+          <small>A safe place for hearts</small>
+        </span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#stories">Story</a>
+        <a href="#about">About Us</a>
+        <a href="admin.html">Admin</a>
+      </div>
+
+      <button class="account-pill" type="button" data-open-account aria-label="Open account menu">
+        <img src="assets/cip_1.png" alt="" data-profile-avatar>
+        <span><span aria-hidden="true">&#9776;</span><b data-account-label>Menu</b></span>
+      </button>
+    </nav>
+
+    <section class="hero" aria-label="MochiMind welcome">
+      <div class="hero-logo-wrap">
+        <img class="hero-logo" src="assets/MochiMind.png" alt="Welcome to MochiMind">
+      </div>
+      <div class="hero-actions">
+        <button class="button pink" type="button" data-open-write>
+          <span aria-hidden="true">&#9829;</span>
+          Share Your Story
+        </button>
+        <a class="button teal" href="#stories">
+          <span aria-hidden="true">&#8981;</span>
+          Explore Stories
+        </a>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="feeling-panel" aria-labelledby="feeling-title">
+      <h2 id="feeling-title">How are you feeling today?</h2>
+      <div class="feeling-list" data-feelings>
+        <button class="is-selected" type="button" data-feeling="All"><span>&#10022;</span>All</button>
+        <button type="button" data-feeling="Happy"><span>&#9786;</span>Happy</button>
+        <button type="button" data-feeling="Sad"><span>&#9785;</span>Sad</button>
+        <button type="button" data-feeling="Tired"><span>&#9729;</span>Tired</button>
+        <button type="button" data-feeling="Lonely"><span>&#9675;</span>Lonely</button>
+      </div>
+      <p class="feeling-status" data-feeling-status>Showing all stories.</p>
+    </section>
+
+    <section class="hope-pocket" data-hope-pocket aria-labelledby="hope-title" aria-live="polite">
+      <div class="hope-pocket-heading">
+        <span aria-hidden="true">&#10049;</span>
+        <div>
+          <h2 id="hope-title">Pocket of Hope</h2>
+          <p>A tiny quote for today.</p>
+        </div>
+      </div>
+      <blockquote data-hope-quote>
+        Setiap langkah kecil hari ini membawa anda lebih dekat kepada impian esok.
+      </blockquote>
+      <div class="hope-pocket-meta">
+        <span aria-hidden="true">&#10022;</span>
+      </div>
+    </section>
+
+    <section class="stories-panel" id="stories" aria-labelledby="stories-title">
+      <div class="section-heading">
+        <span aria-hidden="true">&#9825;</span>
+        <div>
+          <h2 id="stories-title">Someone Like You...</h2>
+          <p>Real people. Real stories. Real support.</p>
+        </div>
+        <a class="see-more-button" href="stories.html">
+          See More
+        </a>
+      </div>
+
+      <div class="story-grid">
+        <article class="story-card">
+          <header class="author">
+            <img src="assets/cip_1.png" alt="">
+            <span>
+              <strong>Anonymous</strong>
+              <small>2 hours ago</small>
+            </span>
+          </header>
+          <p>I've been feeling so tired lately... like no matter how hard I try, it's never enough. Anyone else feel this way?</p>
+          <div class="tags">
+            <span>Tired</span>
+          </div>
+          <footer>
+            <button type="button" data-like-story><span aria-hidden="true">&#9829;</span> <b>0</b> Like</button>
+            <button type="button" data-open-replies><span aria-hidden="true">&#9635;</span> 0</button>
+            <button class="save-story-button" type="button" data-save-story aria-label="Save story"><span aria-hidden="true">&#128278;</span> Save</button>
+          </footer>
+        </article>
+
+        <article class="story-card">
+          <header class="author">
+            <img src="assets/cip_2.png" alt="">
+            <span>
+              <strong>Little Dreamer</strong>
+              <small>5 hours ago</small>
+            </span>
+          </header>
+          <p>Sometimes, I just wish someone would be proud of me. Even just a little.</p>
+          <div class="tags">
+            <span>Lonely</span>
+          </div>
+          <footer>
+            <button type="button" data-like-story><span aria-hidden="true">&#9829;</span> <b>0</b> Like</button>
+            <button type="button" data-open-replies><span aria-hidden="true">&#9635;</span> 0</button>
+            <button class="save-story-button" type="button" data-save-story aria-label="Save story"><span aria-hidden="true">&#128278;</span> Save</button>
+          </footer>
+        </article>
+
+        <article class="story-card">
+          <header class="author">
+            <img src="assets/cip_3.png" alt="">
+            <span>
+              <strong>Sunshine</strong>
+              <small>1 day ago</small>
+            </span>
+          </header>
+          <p>Small progress is still progress! Today I woke up early and I'm proud of me...</p>
+          <div class="tags">
+            <span>Motivated</span>
+          </div>
+          <footer>
+            <button type="button" data-like-story><span aria-hidden="true">&#9829;</span> <b>0</b> Like</button>
+            <button type="button" data-open-replies><span aria-hidden="true">&#9635;</span> 0</button>
+            <button class="save-story-button" type="button" data-save-story aria-label="Save story"><span aria-hidden="true">&#128278;</span> Save</button>
+          </footer>
+        </article>
+      </div>
+
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="about-art">
+        <h2 id="about-title">About Us</h2>
+        <img src="assets/cat_2.png" alt="MochiMind cat holding a heart">
+      </div>
+
+      <div class="about-copy">
+        <p>MochiMind is a cozy community where you can share your thoughts, express your feelings and connect with others who truly understand.</p>
+        <p>We believe every story matters and every heart deserves kindness. You are not alone here.</p>
+
+        <div class="feature-list">
+          <div class="feature">
+            <img src="assets/cp1.png" alt="">
+            <span>
+              <strong>Safe &amp; Anonymous</strong>
+              <small>Your privacy is our priority.</small>
+            </span>
+          </div>
+          <div class="feature">
+            <img src="assets/cp2.png" alt="">
+            <span>
+              <strong>Kind Community</strong>
+              <small>Supportive hearts are always here.</small>
+            </span>
+          </div>
+          <div class="feature">
+            <img src="assets/cp3.png" alt="">
+            <span>
+              <strong>Grow Together</strong>
+              <small>Encourage, inspire and heal together.</small>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span class="footer-brand">
+      <img src="assets/favicon.png" alt="">
+      <strong>MochiMind</strong>
+    </span>
+    <p>@2026 MochiMind. All rights reserved.</p>
+    <img class="footer-cat" src="assets/cat_story.png" alt="">
+  </footer>
+
+  <div data-shared-modals></div>
+</body>
+</html>
+

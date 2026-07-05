@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MochiMind Admin</title>
+  <link rel="icon" href="assets/favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js?v=button-behavior-1" defer></script>
+  <script src="admin.js?v=button-behavior-1" defer></script>
+</head>
+<body class="stories-only-page admin-page">
+  <div class="toast" data-toast hidden></div>
+  <header class="stories-page-header">
+    <nav class="topbar stories-topbar" aria-label="Primary navigation">
+      <a class="brand" href="index.html" aria-label="MochiMind home">
+        <img src="assets/favicon.png" alt="">
+        <span>
+          <strong>MochiMind</strong>
+          <small>A safe place for hearts</small>
+        </span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html#home">Home</a>
+        <a href="stories.html">Story</a>
+        <a href="index.html#about">About Us</a>
+        <a href="admin.html" aria-current="page">Admin</a>
+      </div>
+
+      <button class="account-pill" type="button" data-open-account aria-label="Open account menu">
+        <img src="assets/cip_1.png" alt="" data-profile-avatar>
+        <span><span aria-hidden="true">&#9776;</span><b data-account-label>Menu</b></span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-hero" aria-labelledby="admin-title">
+      <span class="admin-kicker">Admin Dashboard</span>
+      <h1 id="admin-title">MochiMind Community Care</h1>
+      <p>Review community reports, manage shared stories and replies, and keep Pocket of Hope ready for kind days.</p>
+    </section>
+
+    <section class="admin-stat-grid" aria-label="Admin summary">
+      <article class="admin-stat-card">
+        <span class="admin-stat-icon" aria-hidden="true">&#128214;</span>
+        <small>Total Stories</small>
+        <strong data-admin-total-stories>0</strong>
+        <p>Stories shown across the MochiMind community.</p>
+      </article>
+      <article class="admin-stat-card">
+        <span class="admin-stat-icon" aria-hidden="true">&#9873;</span>
+        <small>Reported Items</small>
+        <strong data-admin-reported-stories>0</strong>
+        <p>Story and reply reports from the community.</p>
+      </article>
+      <article class="admin-stat-card">
+        <span class="admin-stat-icon" aria-hidden="true">&#10049;</span>
+        <small>Hope Quotes</small>
+        <strong data-admin-quote-count>20</strong>
+        <p>Daily quote pool for Pocket of Hope.</p>
+      </article>
+      <article class="admin-stat-card">
+        <span class="admin-stat-icon" aria-hidden="true">&#128101;</span>
+        <small>Users</small>
+        <strong data-admin-user-count>0</strong>
+        <p>Registered accounts currently available to this dashboard.</p>
+      </article>
+    </section>
+
+    <section class="admin-grid">
+      <article class="admin-panel">
+        <div class="admin-panel-heading">
+          <h2>Reported Stories & Replies</h2>
+          <span data-admin-report-status>All clear</span>
+        </div>
+        <p class="admin-panel-note">Review marks a report as checked. Dismiss clears it. Story reports can be hidden, and reply reports can be pinned as supportive replies.</p>
+        <div class="admin-list" data-admin-reports-list>
+          <p class="admin-empty">No reported stories yet.</p>
+        </div>
+      </article>
+
+      <article class="admin-panel">
+        <div class="admin-panel-heading">
+          <h2>Quote Manager</h2>
+          <span>Pocket of Hope</span>
+        </div>
+        <div class="admin-quote-preview">
+          <small>Today's quote</small>
+          <p data-admin-current-quote>Loading quote...</p>
+        </div>
+        <form class="admin-quote-form" data-admin-quote-form>
+          <input type="hidden" name="quoteIndex" value="">
+          <label>
+            <span data-admin-quote-form-title>Add New Quote</span>
+            <textarea name="quoteText" rows="4" placeholder="Write a Pocket of Hope quote"></textarea>
+          </label>
+          <div class="admin-action-row">
+            <button class="button pink" type="submit" data-admin-save-quote>Save Quote</button>
+            <button class="button muted" type="button" data-admin-cancel-quote hidden>Cancel Edit</button>
+          </div>
+        </form>
+        <div class="admin-quote-list" data-admin-quote-list></div>
+        <div class="admin-action-row">
+          <button class="button muted" type="button" data-admin-preview-next>Preview Next</button>
+          <button class="button outline" type="button" data-admin-reset-quotes>Reset Quotes</button>
+        </div>
+      </article>
+
+      <article class="admin-panel">
+        <div class="admin-panel-heading">
+          <h2>User List</h2>
+          <span>Registered users</span>
+        </div>
+        <div class="admin-list" data-admin-users-list>
+          <p class="admin-empty">No user account found yet.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div data-shared-modals></div>
+</body>
+</html>

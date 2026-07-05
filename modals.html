@@ -1,0 +1,195 @@
+﻿  <dialog class="modal auth-modal" data-account-modal aria-labelledby="auth-title">
+    <div class="modal-panel auth-panel" data-auth-panel>
+      <button class="icon-close" type="button" data-close-modal aria-label="Close">&times;</button>
+      <div class="auth-ear auth-ear-left" aria-hidden="true"></div>
+      <div class="auth-ear auth-ear-right" aria-hidden="true"></div>
+
+      <form class="auth-view auth-signin is-active" data-auth-form>
+        <h2 id="auth-title">Welcome!</h2>
+        <p data-auth-subtitle>Sign in to continue your journey.</p>
+        <p class="auth-demo-note" data-auth-demo-note>
+          Use your verified email account to continue.
+        </p>
+
+        <label class="auth-field">
+          <span aria-hidden="true">&#9786;</span>
+          <input name="identifier" placeholder="Email" autocomplete="username" required>
+        </label>
+        <label class="auth-field" data-password-row>
+          <span aria-hidden="true">&#128274;</span>
+          <input name="password" placeholder="Password" type="password" autocomplete="current-password" required>
+          <button class="auth-password-toggle" type="button" data-toggle-password aria-label="Show password" aria-pressed="false">
+            <span aria-hidden="true">&#128065;</span>
+          </button>
+        </label>
+        <label class="auth-field" data-display-name-row hidden>
+          <span aria-hidden="true">&#10022;</span>
+          <input name="displayName" placeholder="Display Name" autocomplete="name">
+        </label>
+        <div class="signup-avatar-picker" data-signup-avatar-picker hidden>
+          <p>Choose Your Avatar</p>
+          <div class="avatar-options">
+            <button class="is-selected" type="button" data-signup-avatar-option="assets/cip_1.png" aria-label="Choose orange cat profile"><img src="assets/cip_1.png" alt=""></button>
+            <button type="button" data-signup-avatar-option="assets/cip_2.png" aria-label="Choose green cat profile"><img src="assets/cip_2.png" alt=""></button>
+            <button type="button" data-signup-avatar-option="assets/cip_3.png" aria-label="Choose pink cat profile"><img src="assets/cip_3.png" alt=""></button>
+            <button type="button" data-signup-avatar-option="assets/cip_4.png" aria-label="Choose black cat profile"><img src="assets/cip_4.png" alt=""></button>
+            <button type="button" data-signup-avatar-option="assets/cip_5.png" aria-label="Choose white cat profile"><img src="assets/cip_5.png" alt=""></button>
+          </div>
+        </div>
+        <p class="auth-message" data-auth-message></p>
+        <button class="auth-verify" type="button" data-confirm-email hidden>Confirm Email</button>
+
+        <button class="auth-link" type="button" data-forgot>Forgot password?</button>
+        <button class="auth-submit" type="submit" data-auth-submit>Sign In</button>
+        <button class="auth-create" type="button" data-toggle-signup>
+          <span aria-hidden="true">&#10049;</span>
+          Create New Account
+        </button>
+        <div class="auth-cat" aria-hidden="true">=^.^=</div>
+      </form>
+
+      <section class="auth-view auth-profile" data-profile-view aria-label="User profile">
+        <button class="profile-avatar-wrap" type="button" data-toggle-avatar-picker aria-expanded="false" aria-label="Choose profile image">
+          <img class="profile-avatar" src="assets/cip_1.png" alt="" data-profile-avatar>
+          <span aria-hidden="true">&#10022;</span>
+        </button>
+        <h2>Hi, <span data-profile-name>User</span>!</h2>
+        <p class="profile-email"><span aria-hidden="true">&#9993;</span> <span data-profile-email>user@mochimind.com</span></p>
+
+        <div class="profile-avatar-picker" data-avatar-picker hidden>
+          <p>Choose Profile Image</p>
+          <div class="avatar-options">
+            <button type="button" data-avatar-option="assets/cip_1.png" aria-label="Choose orange cat profile"><img src="assets/cip_1.png" alt=""></button>
+            <button type="button" data-avatar-option="assets/cip_2.png" aria-label="Choose green cat profile"><img src="assets/cip_2.png" alt=""></button>
+            <button type="button" data-avatar-option="assets/cip_3.png" aria-label="Choose pink cat profile"><img src="assets/cip_3.png" alt=""></button>
+            <button type="button" data-avatar-option="assets/cip_4.png" aria-label="Choose black cat profile"><img src="assets/cip_4.png" alt=""></button>
+            <button type="button" data-avatar-option="assets/cip_5.png" aria-label="Choose white cat profile"><img src="assets/cip_5.png" alt=""></button>
+          </div>
+        </div>
+
+        <div class="profile-stats">
+          <div>
+            <span class="profile-stat-icon" aria-hidden="true">&#128214;</span>
+            <strong data-profile-story-count>0</strong>
+            <span>Stories</span>
+          </div>
+          <div>
+            <span class="profile-stat-icon" aria-hidden="true">&#128150;</span>
+            <strong data-profile-like-count>0</strong>
+            <span>Likes</span>
+          </div>
+          <div>
+            <span class="profile-stat-icon" aria-hidden="true">&#128101;</span>
+            <strong data-profile-friend-count>0</strong>
+            <span>Friends</span>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button type="button" data-show-my-stories><span aria-hidden="true">&#9825;</span> My Stories</button>
+          <button type="button" data-show-saved><span aria-hidden="true">&#128278;</span> Saved Stories</button>
+          <button type="button" data-show-friends><span aria-hidden="true">&#128101;</span> Friends</button>
+          <button type="button" data-show-edit-profile><span aria-hidden="true">&#10049;</span> Edit Profile</button>
+          <button class="signout" type="button" data-sign-out><span aria-hidden="true">&#8618;</span> Sign Out</button>
+        </div>
+        <form class="profile-edit-panel" data-profile-edit-panel hidden>
+          <h3>Edit Profile</h3>
+          <label>
+            <span>Display Name</span>
+            <input name="profileName" placeholder="Your name" autocomplete="name">
+          </label>
+          <div class="profile-edit-avatars">
+            <p>Choose Avatar</p>
+            <div class="avatar-options">
+              <button type="button" data-edit-avatar-option="assets/cip_1.png" aria-label="Choose orange cat profile"><img src="assets/cip_1.png" alt=""></button>
+              <button type="button" data-edit-avatar-option="assets/cip_2.png" aria-label="Choose green cat profile"><img src="assets/cip_2.png" alt=""></button>
+              <button type="button" data-edit-avatar-option="assets/cip_3.png" aria-label="Choose pink cat profile"><img src="assets/cip_3.png" alt=""></button>
+              <button type="button" data-edit-avatar-option="assets/cip_4.png" aria-label="Choose black cat profile"><img src="assets/cip_4.png" alt=""></button>
+              <button type="button" data-edit-avatar-option="assets/cip_5.png" aria-label="Choose white cat profile"><img src="assets/cip_5.png" alt=""></button>
+            </div>
+          </div>
+          <button class="profile-save" type="submit">Save Profile</button>
+        </form>
+        <div class="saved-stories-panel my-stories-panel" data-my-stories-panel hidden>
+          <h3>My Stories</h3>
+          <div class="saved-stories-list" data-my-stories-list>
+            <p class="saved-empty">No stories shared yet.</p>
+          </div>
+        </div>
+        <div class="saved-stories-panel" data-saved-panel hidden>
+          <h3>Saved Stories</h3>
+          <div class="saved-stories-list" data-saved-list>
+            <p class="saved-empty">No saved stories yet.</p>
+          </div>
+        </div>
+        <div class="saved-stories-panel friends-panel" data-friends-panel hidden>
+          <h3>Friends</h3>
+          <div class="friends-list" data-friends-list>
+            <p class="saved-empty">No friends yet.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog class="modal other-profile-modal" data-other-profile-modal aria-labelledby="other-profile-name">
+    <div class="modal-panel other-profile-panel">
+      <button class="icon-close" type="button" data-close-modal aria-label="Close">&times;</button>
+      <img class="other-profile-avatar" src="assets/cip_1.png" alt="" data-other-profile-avatar>
+      <h2 id="other-profile-name" data-other-profile-name>Profile</h2>
+      <div class="profile-stats other-profile-stats">
+        <div><span class="profile-stat-icon" aria-hidden="true">&#128214;</span><strong data-other-story-count>0</strong><span>Stories</span></div>
+        <div><span class="profile-stat-icon" aria-hidden="true">&#128150;</span><strong data-other-like-count>0</strong><span>Likes</span></div>
+        <div><span class="profile-stat-icon" aria-hidden="true">&#128101;</span><strong data-other-friend-count>0</strong><span>Friends</span></div>
+      </div>
+      <div class="other-profile-actions">
+        <button type="button" data-like-other-profile><span aria-hidden="true">&#128150;</span> Like Profile</button>
+        <button type="button" data-friend-other-profile><span aria-hidden="true">&#128101;</span> Friend</button>
+      </div>
+      <div class="saved-stories-panel other-profile-stories">
+        <h3>Stories</h3>
+        <div class="saved-stories-list" data-other-profile-stories></div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="modal replies-modal" data-replies-modal aria-labelledby="replies-title">
+    <div class="modal-panel replies-panel">
+      <button class="icon-close" type="button" data-close-modal aria-label="Close">&times;</button>
+      <h2 class="sr-only" id="replies-title">Replies</h2>
+      <div class="reply-list" data-reply-list>
+      </div>
+      <form class="reply-box" data-reply-form>
+        <img src="assets/cip_2.png" alt="">
+        <textarea name="reply" rows="2" placeholder="Write a kind reply" aria-label="Reply" autocomplete="off"></textarea>
+        <button type="submit" aria-label="Send">&#10148;</button>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog class="modal write-modal" data-write-modal aria-labelledby="write-title">
+    <form class="modal-panel write-panel" method="dialog">
+      <button class="icon-close" type="button" data-close-modal aria-label="Close">&times;</button>
+      <h2 id="write-title">Write Your Story</h2>
+      <label>
+        <span>How are you feeling?</span>
+        <select name="mood">
+          <option>Happy</option>
+          <option>Sad</option>
+          <option>Tired</option>
+          <option>Lonely</option>
+          <option>Need Support</option>
+          <option>Other</option>
+        </select>
+      </label>
+      <label data-custom-mood-row hidden>
+        <span>Your feeling</span>
+        <input name="customMood" maxlength="28" placeholder="Write your feeling" autocomplete="off">
+      </label>
+      <label>
+        <span>Your story</span>
+        <textarea name="story" rows="7" placeholder="Share what is on your heart."></textarea>
+      </label>
+      <button class="button pink" type="submit">Share Story</button>
+    </form>
+  </dialog>
