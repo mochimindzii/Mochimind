@@ -219,6 +219,15 @@ async function deleteFirestoreAdminQuote(index) {
   if (!existingQuote?.id) return false;
   await adminFirebase.deleteDoc(adminFirebase.doc(adminFirebase.db, "quotes", existingQuote.id));
   firebaseAdminQuoteDocs.splice(index, 1);
+  await Promise.all(
+    firebaseAdminQuoteDocs.map((quote, order) => (
+      adminFirebase.updateDoc(adminFirebase.doc(adminFirebase.db, "quotes", quote.id), {
+        order,
+        updatedAt: adminFirebase.serverTimestamp(),
+      })
+    ))
+  );
+  firebaseAdminQuoteDocs = firebaseAdminQuoteDocs.map((quote, order) => ({ ...quote, order }));
   return true;
 }
 
@@ -506,7 +515,7 @@ async function loadFirestoreAdminReports(firebase) {
 
 async function initFirebaseAdminDashboard() {
   try {
-    const firebase = await import("./firebase-config.js?v=button-behavior-1");
+    const firebase = await import("./firebase-config.js?v=quote-delete-fix-1");
     adminFirebase = firebase;
     firebase.onAuthStateChanged(firebase.auth, async (user) => {
       if (!user) {
@@ -610,12 +619,21 @@ adminQuoteList?.addEventListener("click", async (event) => {
     const index = Number(remove.dataset.adminDeleteQuote);
     if (!window.confirm("Delete this quote?")) return;
     remove.disabled = true;
+    let deletedOnline = false;
     try {
-      await deleteFirestoreAdminQuote(index);
+      deletedOnline = await deleteFirestoreAdminQuote(index);
     } catch (error) {
       console.warn("Could not delete Firestore quote", error);
-      showAdminToast("Quote deleted locally, but not online.");
+      remove.disabled = false;
+      showAdminToast("Quote could not be deleted online.");
+      return;
     }
+    if (adminFirebase && firebaseAdminQuoteDocs.length && !deletedOnline) {
+      remove.disabled = false;
+      showAdminToast("Quote could not be deleted online. Refresh and try again.");
+      return;
+    }
+    if (adminQuoteIndex >= index) adminQuoteIndex = Math.max(0, adminQuoteIndex - 1);
     saveAdminQuotes(adminHopeQuotes.filter((_, quoteIndex) => quoteIndex !== index));
     if (adminFirebase) {
       const refreshed = await loadFirestoreAdminQuotes(adminFirebase);

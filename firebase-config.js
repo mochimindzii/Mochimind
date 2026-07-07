@@ -24,12 +24,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCy1n-5gr3MKsqYS056UFIcJ_6yl4mDBWA",
-  authDomain: "mochimind-fdea7.firebaseapp.com",
-  projectId: "mochimind-fdea7",
-  storageBucket: "mochimind-fdea7.firebasestorage.app",
-  messagingSenderId: "665759625923",
-  appId: "1:665759625923:web:1740f2a37ef1fc49366876"
+  apiKey: "AIzaSyBCjop9RlRjrqg5SW3iVfI1dzU6KpCPsrc",
+  authDomain: "mochimind-cde3a.firebaseapp.com",
+  projectId: "mochimind-cde3a",
+  storageBucket: "mochimind-cde3a.firebasestorage.app",
+  messagingSenderId: "233904483021",
+  appId: "1:233904483021:web:2503cc1132135a5f289784"
 };
 
 const app = initializeApp(firebaseConfig);

@@ -178,9 +178,12 @@ function firebaseAuthMessage(error, fallback) {
   if (code === "auth/weak-password") return "Password should be at least 6 characters.";
   if (code === "auth/invalid-email") return "Please enter a valid email address.";
   if (code === "auth/operation-not-allowed") return "Please enable Email/Password sign-in in Firebase Authentication.";
+  if (code === "auth/configuration-not-found") return "Firebase Authentication is not fully set up. Enable Email/Password sign-in in Firebase.";
   if (code === "auth/unauthorized-domain") return "This website domain is not authorized in Firebase.";
+  if (code === "auth/invalid-api-key") return "Firebase API key is incorrect. Please check firebase-config.js.";
+  if (code === "auth/app-not-authorized") return "This app is not authorized to use this Firebase project.";
   if (code === "auth/network-request-failed") return "Firebase cannot connect. Please check your internet connection.";
-  return fallback;
+  return code ? `${fallback} (${code})` : fallback;
 }
 
 function verificationMessage(email) {
@@ -435,7 +438,7 @@ async function loadFirebaseHopeQuotes() {
 
 async function initFirebaseAuth() {
   try {
-    const firebase = await import("./firebase-config.js?v=button-behavior-1");
+    const firebase = await import("./firebase-config.js?v=quote-delete-fix-1");
     firebaseAuth = firebase;
     firebase.onAuthStateChanged(firebase.auth, async (user) => {
       if (user && !user.emailVerified) {
@@ -700,6 +703,17 @@ function setAuthMode(nextMode) {
   passwordInput.autocomplete = "current-password";
   passwordInput.required = true;
   displayNameInput.required = false;
+}
+
+function showSignInWithEmail(email, message = "") {
+  const rememberedEmail = email || pendingVerificationEmail || "";
+  setAuthMode("signin");
+  if (identifierInput && rememberedEmail) identifierInput.value = rememberedEmail;
+  if (passwordInput) {
+    passwordInput.value = "";
+    passwordInput.focus();
+  }
+  if (message) setAuthMessage(message, "success");
 }
 
 function savedUserName() {
@@ -1357,8 +1371,9 @@ function showProfileView() {
 
   const name = savedUserName();
   const email = savedUserEmail();
+  const displayName = name || (email ? email.split("@")[0] : "User");
 
-  profileName.textContent = name;
+  profileName.textContent = displayName;
   profileEmail.textContent = email;
   updateProfileAvatar();
   if (avatarPicker) avatarPicker.hidden = true;
@@ -1977,7 +1992,9 @@ editProfileButton?.addEventListener("click", () => {
 });
 
 toggleSignup?.addEventListener("click", () => {
+  const currentEmail = identifierInput?.value || pendingVerificationEmail;
   setAuthMode(authMode === "signin" ? "signup" : "signin");
+  if (identifierInput && currentEmail) identifierInput.value = currentEmail;
 });
 
 forgotButton?.addEventListener("click", () => setAuthMode("forgot"));
@@ -1987,9 +2004,8 @@ passwordToggle?.addEventListener("click", () => {
 });
 
 confirmEmailButton?.addEventListener("click", () => {
-  pendingVerificationEmail = "";
-  setAuthMode("signin");
-  setAuthMessage("");
+  const email = pendingVerificationEmail;
+  showSignInWithEmail(email, email ? "Email is ready. Please enter your password." : "");
 });
 
 authForm?.addEventListener("submit", async (event) => {
@@ -2031,6 +2047,7 @@ authForm?.addEventListener("submit", async (event) => {
       await firebase.signOut(firebase.auth);
       authForm.reset();
       setAuthMode("verify");
+      if (identifierInput) identifierInput.value = pendingVerificationEmail;
       setAuthMessage(verificationMessage(pendingVerificationEmail), "success");
       showToast("Verification email sent.");
     } catch (error) {
@@ -2048,15 +2065,16 @@ authForm?.addEventListener("submit", async (event) => {
       await firebase.signOut(firebase.auth);
       authForm.reset();
       setAuthMode("verify");
+      if (identifierInput) identifierInput.value = pendingVerificationEmail;
       setAuthMessage(verificationMessage(pendingVerificationEmail), "success");
       showToast("Please verify your email first.");
       return;
     }
+    firebaseUser = userCredential.user;
     await loadFirebaseUserProfile(userCredential.user, firebase);
     await saveFirebaseUserProfile(userCredential.user, firebase);
     authForm.reset();
     updateAccountLabel();
-    setAuthMode("signin");
     showProfileView();
     showToast("Signed in.");
   } catch (error) {
