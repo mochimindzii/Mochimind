@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MochiMind</title>
   <link rel="icon" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js?v=quote-delete-fix-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=help-nav-1">
+  <script src="script.js?v=survey-home-2" defer></script>
 </head>
 <body>
   <div class="toast" data-toast hidden></div>
@@ -21,10 +21,11 @@
       </a>
 
       <div class="nav-links">
-        <a href="#home">Home</a>
-        <a href="#stories">Story</a>
-        <a href="#about">About Us</a>
-        <a href="admin.html">Admin</a>
+        <a href="#home" aria-current="page"><span aria-hidden="true">&#8962;</span> Home</a>
+        <button class="nav-action" type="button" data-open-write><span aria-hidden="true">&#9998;</span> Share Story</button>
+        <a href="stories.html"><span aria-hidden="true">&#128214;</span> Read Stories</a>
+        <a href="#help"><span aria-hidden="true">&#9825;</span> Help</a>
+        <a href="admin.html"><span aria-hidden="true">&#9881;</span> Admin</a>
       </div>
 
       <button class="account-pill" type="button" data-open-account aria-label="Open account menu">
@@ -77,6 +78,76 @@
       <div class="hope-pocket-meta">
         <span aria-hidden="true">&#10022;</span>
       </div>
+    </section>
+
+    <section class="survey-home-card" aria-labelledby="survey-home-title">
+      <div class="survey-home-intro">
+        <span aria-hidden="true">&#9997;</span>
+        <div>
+          <h2 id="survey-home-title">MochiMind Mental Health Support Platform Survey</h2>
+          <p>Your participation is greatly appreciated. Please answer the following questions honestly based on your opinions and experiences. Your feedback will contribute to the development and improvement of the MochiMind platform. All responses are confidential and will be used for academic purposes only.</p>
+        </div>
+      </div>
+      <button class="survey-more-button" type="button" data-home-survey-more>See More</button>
+
+      <form class="profile-survey-panel home-survey-panel" data-home-survey-panel hidden>
+        <label>
+          <span>Age Group</span>
+          <select name="ageGroup" required>
+            <option value="">Choose age group</option>
+            <option>Below 18 years old</option>
+            <option>18-25 years old</option>
+            <option>26-35 years old</option>
+            <option>36-45 years old</option>
+            <option>46 years old and above</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Gender</span>
+          <select name="gender" required>
+            <option value="">Choose gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Occupation</span>
+          <select name="occupation" required>
+            <option value="">Choose occupation</option>
+            <option>Student</option>
+            <option>Employed</option>
+            <option>Self-employed</option>
+            <option>Unemployed</option>
+            <option>Retired</option>
+          </select>
+        </label>
+
+        <fieldset>
+          <legend>Have you ever experienced emotional struggles or mental health challenges?</legend>
+          <label><input type="radio" name="experiencedChallenges" value="Yes" required> Yes</label>
+          <label><input type="radio" name="experiencedChallenges" value="No" required> No</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>What types of problems have you faced?</legend>
+          <label><input type="checkbox" name="problems" value="Financial problem"> Financial problem</label>
+          <label><input type="checkbox" name="problems" value="Economic problem"> Economic problem</label>
+          <label><input type="checkbox" name="problems" value="Job or workplace problem"> Job or workplace problem</label>
+          <label><input type="checkbox" name="problems" value="Health problem"> Health problem</label>
+          <label><input type="checkbox" name="problems" value="Family problem"> Family problem</label>
+          <label><input type="checkbox" name="problems" value="Education problem"> Education problem</label>
+          <label><input type="checkbox" name="problems" value="Relationship problem"> Relationship problem</label>
+          <label><input type="checkbox" name="problems" value="Other problems"> Other problems</label>
+        </fieldset>
+
+        <p class="survey-status" data-home-survey-status></p>
+        <div class="survey-actions">
+          <button class="profile-save" type="submit">Submit Survey</button>
+        </div>
+      </form>
     </section>
 
     <section class="stories-panel" id="stories" aria-labelledby="stories-title">
@@ -150,6 +221,34 @@
         </article>
       </div>
 
+    </section>
+
+    <section class="help-panel" id="help" aria-labelledby="help-title">
+      <div class="section-heading">
+        <span aria-hidden="true">&#9825;</span>
+        <div>
+          <h2 id="help-title">Help Is Available</h2>
+          <p>You are not alone. Reach out to someone safe when your heart feels heavy.</p>
+        </div>
+      </div>
+
+      <div class="help-grid">
+        <article class="help-card">
+          <span aria-hidden="true">&#9877;</span>
+          <h3>Professional Support</h3>
+          <p>Meet a counsellor, psychologist, lecturer, or trusted support service when you need guidance.</p>
+        </article>
+        <article class="help-card">
+          <span aria-hidden="true">&#9742;</span>
+          <h3>Emergency Help</h3>
+          <p>If you are in danger or need urgent help, contact local emergency services immediately.</p>
+        </article>
+        <article class="help-card">
+          <span aria-hidden="true">&#128101;</span>
+          <h3>Talk To Someone</h3>
+          <p>Speak with family members, friends, teachers, or someone you trust. Reaching out is strength.</p>
+        </article>
+      </div>
     </section>
 
     <section class="about" id="about" aria-labelledby="about-title">

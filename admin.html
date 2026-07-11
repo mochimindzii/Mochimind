@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MochiMind Admin</title>
   <link rel="icon" href="assets/favicon.png">
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js?v=quote-delete-fix-1" defer></script>
-  <script src="admin.js?v=quote-delete-fix-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=help-nav-1">
+  <script src="script.js?v=survey-home-2" defer></script>
+  <script src="admin.js?v=survey-home-2" defer></script>
 </head>
 <body class="stories-only-page admin-page">
   <div class="toast" data-toast hidden></div>
@@ -22,10 +22,11 @@
       </a>
 
       <div class="nav-links">
-        <a href="index.html#home">Home</a>
-        <a href="stories.html">Story</a>
-        <a href="index.html#about">About Us</a>
-        <a href="admin.html" aria-current="page">Admin</a>
+        <a href="index.html#home"><span aria-hidden="true">&#8962;</span> Home</a>
+        <button class="nav-action" type="button" data-open-write><span aria-hidden="true">&#9998;</span> Share Story</button>
+        <a href="stories.html"><span aria-hidden="true">&#128214;</span> Read Stories</a>
+        <a href="index.html#help"><span aria-hidden="true">&#9825;</span> Help</a>
+        <a href="admin.html" aria-current="page"><span aria-hidden="true">&#9881;</span> Admin</a>
       </div>
 
       <button class="account-pill" type="button" data-open-account aria-label="Open account menu">
@@ -66,6 +67,12 @@
         <small>Users</small>
         <strong data-admin-user-count>0</strong>
         <p>Registered accounts currently available to this dashboard.</p>
+      </article>
+      <article class="admin-stat-card">
+        <span class="admin-stat-icon" aria-hidden="true">&#9997;</span>
+        <small>Survey Responses</small>
+        <strong data-admin-survey-count>0</strong>
+        <p>User requirement survey answers collected from the community.</p>
       </article>
     </section>
 
@@ -115,6 +122,17 @@
         </div>
         <div class="admin-list" data-admin-users-list>
           <p class="admin-empty">No user account found yet.</p>
+        </div>
+      </article>
+
+      <article class="admin-panel">
+        <div class="admin-panel-heading">
+          <h2>Survey Summary</h2>
+          <span>User data</span>
+        </div>
+        <p class="admin-panel-note">Counts are based on submitted user requirement survey answers.</p>
+        <div class="admin-survey-summary" data-admin-survey-summary>
+          <p class="admin-empty">No survey responses yet.</p>
         </div>
       </article>
     </section>

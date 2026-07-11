@@ -46,6 +46,13 @@ const profileFriendCount = document.querySelector("[data-profile-friend-count]")
 const editProfileButton = document.querySelector("[data-show-edit-profile]");
 const editProfilePanel = document.querySelector("[data-profile-edit-panel]");
 const editProfileNameInput = document.querySelector("input[name='profileName']");
+const showSurveyButton = document.querySelector("[data-show-survey]");
+const surveyPanel = document.querySelector("[data-survey-panel]");
+const surveyStatus = document.querySelector("[data-survey-status]");
+const dismissSurveyButton = document.querySelector("[data-dismiss-survey]");
+const homeSurveyMoreButton = document.querySelector("[data-home-survey-more]");
+const homeSurveyPanel = document.querySelector("[data-home-survey-panel]");
+const homeSurveyStatus = document.querySelector("[data-home-survey-status]");
 const otherProfileAvatar = document.querySelector("[data-other-profile-avatar]");
 const otherProfileName = document.querySelector("[data-other-profile-name]");
 const otherStoryCount = document.querySelector("[data-other-story-count]");
@@ -92,6 +99,8 @@ const LIKED_PROFILES_KEY = "mochimind:likedProfiles";
 const FRIEND_PROFILES_KEY = "mochimind:friendProfiles";
 const ACCOUNT_KEY = "mochimind:account";
 const PROFILE_DATA_KEY = "mochimind:userProfiles";
+const SURVEY_DATA_KEY = "mochimind:userSurveys";
+const SURVEY_PROMPT_KEY = "mochimind:surveyPromptShown";
 const AUTH_SESSION_KEY = "mochimind:isSignedIn";
 const PROFILE_AVATAR_KEY = "mochimind:profileAvatar";
 const HOPE_QUOTE_KEY = "mochimind:hopeQuote";
@@ -113,6 +122,7 @@ let editingStoryId = "";
 let toastTimer = null;
 let storyFormSubmitting = false;
 let replyFormSubmitting = false;
+let surveySubmitting = false;
 let firebaseAuth = null;
 let firebaseUser = null;
 let firebaseAuthReady = null;
@@ -231,6 +241,126 @@ async function saveCurrentProfileToFirebase() {
     avatar: account?.avatar || DEFAULT_AVATAR,
     updatedAt: firebase.serverTimestamp(),
   }, { merge: true });
+}
+
+function savedSurveyMap() {
+  try {
+    return JSON.parse(localStorage.getItem(SURVEY_DATA_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function savedSurveyForCurrentUser() {
+  if (!firebaseUser?.uid) return null;
+  return savedSurveyMap()[firebaseUser.uid] || null;
+}
+
+function storeSurveyForCurrentUser(survey) {
+  if (!firebaseUser?.uid) return;
+  try {
+    const surveys = savedSurveyMap();
+    surveys[firebaseUser.uid] = survey;
+    localStorage.setItem(SURVEY_DATA_KEY, JSON.stringify(surveys));
+  } catch {}
+}
+
+function surveyPromptShownMap() {
+  try {
+    return JSON.parse(localStorage.getItem(SURVEY_PROMPT_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function hasShownSurveyPrompt() {
+  if (!firebaseUser?.uid) return true;
+  return Boolean(surveyPromptShownMap()[firebaseUser.uid]);
+}
+
+function markSurveyPromptShown() {
+  if (!firebaseUser?.uid) return;
+  try {
+    const shown = surveyPromptShownMap();
+    shown[firebaseUser.uid] = true;
+    localStorage.setItem(SURVEY_PROMPT_KEY, JSON.stringify(shown));
+  } catch {}
+}
+
+function surveyFromForm(form) {
+  const formData = new FormData(form);
+  return {
+    userId: firebaseUser?.uid || "",
+    email: firebaseUser?.email || "",
+    ageGroup: String(formData.get("ageGroup") || ""),
+    gender: String(formData.get("gender") || ""),
+    occupation: String(formData.get("occupation") || ""),
+    experiencedChallenges: String(formData.get("experiencedChallenges") || ""),
+    problems: formData.getAll("problems").map(String),
+    submittedAtLocal: Date.now(),
+  };
+}
+
+function setSurveyStatus(statusElement, message, type = "") {
+  if (!statusElement) return;
+  statusElement.textContent = message;
+  statusElement.dataset.type = type;
+}
+
+async function submitSurveyForm(form, statusElement) {
+  if (!form || surveySubmitting) return;
+  if (!firebaseUser) {
+    setAuthMode("signin");
+    setAuthMessage("Please log in with a verified email before answering the survey.");
+    openModal(accountModal);
+    return;
+  }
+
+  const survey = surveyFromForm(form);
+  if (!survey.problems.length) {
+    setSurveyStatus(statusElement, "Please choose at least one problem category.", "error");
+    return;
+  }
+
+  surveySubmitting = true;
+  const submitButton = form.querySelector("button[type='submit']");
+  if (submitButton) submitButton.disabled = true;
+  try {
+    await saveFirebaseSurvey(survey);
+    storeSurveyForCurrentUser(survey);
+    form.reset();
+    updateSurveyPanelState();
+    showToast("Survey submitted. Thank you.");
+  } catch (error) {
+    console.warn("Could not save survey", error);
+    storeSurveyForCurrentUser(survey);
+    updateSurveyPanelState();
+    showToast("Survey saved on this device.");
+  } finally {
+    surveySubmitting = false;
+    if (submitButton) submitButton.disabled = false;
+  }
+}
+
+async function loadFirebaseSurvey(firebase = firebaseAuth) {
+  if (!firebase?.db || !firebaseUser?.uid || !firebase.getDoc) return null;
+  const surveySnapshot = await firebase.getDoc(firebase.doc(firebase.db, "surveys", firebaseUser.uid));
+  if (!surveySnapshot.exists()) return null;
+  const survey = surveySnapshot.data();
+  storeSurveyForCurrentUser(survey);
+  return survey;
+}
+
+async function saveFirebaseSurvey(survey) {
+  const firebase = firebaseAuth || await firebaseAuthReady;
+  if (!firebase?.db || !firebaseUser?.uid) return false;
+  await firebase.setDoc(firebase.doc(firebase.db, "surveys", firebaseUser.uid), {
+    ...survey,
+    userId: firebaseUser.uid,
+    email: firebaseUser.email || "",
+    submittedAt: firebase.serverTimestamp(),
+  }, { merge: true });
+  return true;
 }
 
 function firebaseStoryFromDoc(docSnapshot) {
@@ -438,7 +568,7 @@ async function loadFirebaseHopeQuotes() {
 
 async function initFirebaseAuth() {
   try {
-    const firebase = await import("./firebase-config.js?v=quote-delete-fix-1");
+    const firebase = await import("./firebase-config.js?v=survey-home-2");
     firebaseAuth = firebase;
     firebase.onAuthStateChanged(firebase.auth, async (user) => {
       if (user && !user.emailVerified) {
@@ -459,6 +589,7 @@ async function initFirebaseAuth() {
         try {
           await loadFirebaseUserProfile(user, firebase);
           await saveFirebaseUserProfile(user, firebase);
+          await loadFirebaseSurvey(firebase);
           await loadFirebaseStories();
           await loadFirebaseHopeQuotes();
         } catch (error) {
@@ -1352,6 +1483,37 @@ function resetReplyFormState() {
   replyForm?.querySelector("button[type='submit']")?.setAttribute("aria-label", "Send");
 }
 
+function updateSurveyPanelState({ revealIfNeeded = false } = {}) {
+  const completed = Boolean(savedSurveyForCurrentUser());
+  if (showSurveyButton) {
+    showSurveyButton.innerHTML = completed
+      ? '<span aria-hidden="true">&#10003;</span> Survey Completed'
+      : '<span aria-hidden="true">&#9997;</span> User Survey';
+    showSurveyButton.disabled = completed;
+  }
+  if (homeSurveyMoreButton) {
+    homeSurveyMoreButton.textContent = completed ? "Survey Completed" : "See More";
+    homeSurveyMoreButton.disabled = completed;
+  }
+  if (surveyStatus) {
+    surveyStatus.textContent = completed ? "Survey completed. Thank you for helping MochiMind." : "";
+    surveyStatus.dataset.type = completed ? "success" : "";
+  }
+  if (homeSurveyStatus) {
+    homeSurveyStatus.textContent = completed ? "Survey completed. Thank you for helping MochiMind." : "";
+    homeSurveyStatus.dataset.type = completed ? "success" : "";
+  }
+  if (completed) {
+    if (surveyPanel) surveyPanel.hidden = true;
+    if (homeSurveyPanel) homeSurveyPanel.hidden = true;
+    return;
+  }
+  if (surveyPanel && revealIfNeeded && !hasShownSurveyPrompt()) {
+    surveyPanel.hidden = false;
+    markSurveyPromptShown();
+  }
+}
+
 function syncReplyCounts() {
   document.querySelectorAll("[data-open-replies]").forEach((button) => {
     const card = button.closest(".story-card");
@@ -1379,6 +1541,7 @@ function showProfileView() {
   if (avatarPicker) avatarPicker.hidden = true;
   avatarPickerToggle?.setAttribute("aria-expanded", "false");
   if (editProfilePanel) editProfilePanel.hidden = true;
+  updateSurveyPanelState({ revealIfNeeded: !savedSurveyForCurrentUser() });
   signInView?.classList.remove("is-active");
   profileView?.classList.add("is-active");
   authPanel?.classList.add("is-profile");
@@ -1979,6 +2142,39 @@ showFriendsButton?.addEventListener("click", () => {
   }
 });
 
+showSurveyButton?.addEventListener("click", () => {
+  if (!surveyPanel || savedSurveyForCurrentUser()) return;
+  markSurveyPromptShown();
+  surveyPanel.hidden = !surveyPanel.hidden;
+  if (!surveyPanel.hidden) {
+    surveyPanel.scrollIntoView({ block: "nearest" });
+  }
+});
+
+dismissSurveyButton?.addEventListener("click", () => {
+  if (!surveyPanel) return;
+  markSurveyPromptShown();
+  surveyPanel.hidden = true;
+  showToast("Survey saved for later.");
+});
+
+homeSurveyMoreButton?.addEventListener("click", () => {
+  if (savedSurveyForCurrentUser()) return;
+  if (!firebaseUser) {
+    setAuthMode("signin");
+    setAuthMessage("Please log in with a verified email before answering the survey.");
+    openModal(accountModal);
+    return;
+  }
+  if (!homeSurveyPanel) return;
+  markSurveyPromptShown();
+  homeSurveyPanel.hidden = !homeSurveyPanel.hidden;
+  homeSurveyMoreButton.textContent = homeSurveyPanel.hidden ? "See More" : "Hide Survey";
+  if (!homeSurveyPanel.hidden) {
+    homeSurveyPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
+
 editProfileButton?.addEventListener("click", () => {
   if (!editProfilePanel) return;
   const account = savedAccount();
@@ -1989,6 +2185,16 @@ editProfileButton?.addEventListener("click", () => {
   if (!editProfilePanel.hidden) {
     editProfilePanel.scrollIntoView({ block: "nearest" });
   }
+});
+
+surveyPanel?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  await submitSurveyForm(surveyPanel, surveyStatus);
+});
+
+homeSurveyPanel?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  await submitSurveyForm(homeSurveyPanel, homeSurveyStatus);
 });
 
 toggleSignup?.addEventListener("click", () => {

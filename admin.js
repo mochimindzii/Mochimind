@@ -2,6 +2,7 @@ const adminTotalStories = document.querySelector("[data-admin-total-stories]");
 const adminReportedStories = document.querySelector("[data-admin-reported-stories]");
 const adminQuoteCount = document.querySelector("[data-admin-quote-count]");
 const adminUserCount = document.querySelector("[data-admin-user-count]");
+const adminSurveyCount = document.querySelector("[data-admin-survey-count]");
 const adminCurrentQuote = document.querySelector("[data-admin-current-quote]");
 const adminPreviewNext = document.querySelector("[data-admin-preview-next]");
 const adminQuoteForm = document.querySelector("[data-admin-quote-form]");
@@ -12,6 +13,7 @@ const adminResetQuotes = document.querySelector("[data-admin-reset-quotes]");
 const adminUsersList = document.querySelector("[data-admin-users-list]");
 const adminReportsList = document.querySelector("[data-admin-reports-list]");
 const adminReportStatus = document.querySelector("[data-admin-report-status]");
+const adminSurveySummary = document.querySelector("[data-admin-survey-summary]");
 const adminMain = document.querySelector(".admin-main");
 const adminToast = document.querySelector("[data-toast]");
 
@@ -23,6 +25,7 @@ const ADMIN_PINNED_REPLIES_KEY = "mochimind:pinnedReplies";
 const ADMIN_HIDDEN_STORIES_KEY = "mochimind:hiddenStories";
 const ADMIN_HOPE_QUOTE_KEY = "mochimind:hopeQuote";
 const ADMIN_HOPE_QUOTES_KEY = "mochimind:hopeQuotes";
+const ADMIN_SURVEY_DATA_KEY = "mochimind:userSurveys";
 const ADMIN_EMAILS = ["adminmochimind@gmail.com"];
 
 const defaultAdminHopeQuotes = [
@@ -293,6 +296,74 @@ function saveHiddenStories(stories) {
   writeAdminJson(ADMIN_HIDDEN_STORIES_KEY, stories);
 }
 
+function savedAdminSurveys() {
+  const surveyMap = readAdminJson(ADMIN_SURVEY_DATA_KEY, {});
+  return Object.values(surveyMap || {});
+}
+
+function countValues(items, getter) {
+  return items.reduce((counts, item) => {
+    const value = getter(item);
+    if (Array.isArray(value)) {
+      value.forEach((entry) => {
+        if (entry) counts[entry] = (counts[entry] || 0) + 1;
+      });
+      return counts;
+    }
+    if (value) counts[value] = (counts[value] || 0) + 1;
+    return counts;
+  }, {});
+}
+
+function createSurveyGroup(title, counts) {
+  const group = document.createElement("section");
+  group.className = "admin-survey-group";
+  const heading = document.createElement("h3");
+  heading.textContent = title;
+  group.append(heading);
+
+  const entries = Object.entries(counts).sort((first, second) => second[1] - first[1]);
+  if (!entries.length) {
+    const empty = document.createElement("p");
+    empty.innerHTML = "<span>No data yet</span><strong>0</strong>";
+    group.append(empty);
+    return group;
+  }
+
+  entries.forEach(([label, count]) => {
+    const row = document.createElement("p");
+    const name = document.createElement("span");
+    const value = document.createElement("strong");
+    name.textContent = label;
+    value.textContent = String(count);
+    row.append(name, value);
+    group.append(row);
+  });
+  return group;
+}
+
+function renderAdminSurveySummary(surveys = savedAdminSurveys()) {
+  if (!adminSurveySummary) return;
+  adminSurveySummary.innerHTML = "";
+  if (adminSurveyCount) adminSurveyCount.textContent = String(surveys.length);
+
+  if (!surveys.length) {
+    const empty = document.createElement("p");
+    empty.className = "admin-empty";
+    empty.textContent = "No survey responses yet.";
+    adminSurveySummary.append(empty);
+    return;
+  }
+
+  adminSurveySummary.append(
+    createSurveyGroup("Age Groups", countValues(surveys, (survey) => survey.ageGroup)),
+    createSurveyGroup("Gender", countValues(surveys, (survey) => survey.gender)),
+    createSurveyGroup("Occupation", countValues(surveys, (survey) => survey.occupation)),
+    createSurveyGroup("Challenges", countValues(surveys, (survey) => survey.experiencedChallenges)),
+    createSurveyGroup("Problem Categories", countValues(surveys, (survey) => survey.problems || []))
+  );
+}
+
 function renderAdminUsers(account) {
   if (!adminUsersList) return;
   adminUsersList.innerHTML = "";
@@ -474,9 +545,11 @@ function initAdminDashboard() {
   if (adminReportedStories) adminReportedStories.textContent = String(reports.length);
   if (adminQuoteCount) adminQuoteCount.textContent = String(adminHopeQuotes.length);
   if (adminUserCount) adminUserCount.textContent = account?.email ? "1" : "0";
+  if (adminSurveyCount) adminSurveyCount.textContent = String(savedAdminSurveys().length);
 
   renderAdminUsers(account);
   renderAdminReports();
+  renderAdminSurveySummary();
   renderAdminQuote(Number(quoteState?.index || 0));
   renderAdminQuoteList();
 }
@@ -513,9 +586,23 @@ async function loadFirestoreAdminReports(firebase) {
   }
 }
 
+async function loadFirestoreAdminSurveys(firebase) {
+  try {
+    const snapshot = await firebase.getDocs(firebase.collection(firebase.db, "surveys"));
+    const surveys = snapshot.docs.map((docSnapshot) => ({
+      id: docSnapshot.id,
+      ...docSnapshot.data(),
+    }));
+    renderAdminSurveySummary(surveys);
+  } catch (error) {
+    console.warn("Could not load Firestore surveys", error);
+    renderAdminSurveySummary();
+  }
+}
+
 async function initFirebaseAdminDashboard() {
   try {
-    const firebase = await import("./firebase-config.js?v=quote-delete-fix-1");
+    const firebase = await import("./firebase-config.js?v=survey-home-2");
     adminFirebase = firebase;
     firebase.onAuthStateChanged(firebase.auth, async (user) => {
       if (!user) {
@@ -528,6 +615,7 @@ async function initFirebaseAdminDashboard() {
       }
       await loadFirestoreAdminReports(firebase);
       await loadFirestoreAdminQuotes(firebase);
+      await loadFirestoreAdminSurveys(firebase);
     });
   } catch (error) {
     console.warn("Could not connect admin dashboard to Firebase", error);

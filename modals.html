@@ -89,9 +89,72 @@
           <button type="button" data-show-my-stories><span aria-hidden="true">&#9825;</span> My Stories</button>
           <button type="button" data-show-saved><span aria-hidden="true">&#128278;</span> Saved Stories</button>
           <button type="button" data-show-friends><span aria-hidden="true">&#128101;</span> Friends</button>
+          <button type="button" data-show-survey><span aria-hidden="true">&#9997;</span> User Survey</button>
           <button type="button" data-show-edit-profile><span aria-hidden="true">&#10049;</span> Edit Profile</button>
           <button class="signout" type="button" data-sign-out><span aria-hidden="true">&#8618;</span> Sign Out</button>
         </div>
+        <form class="profile-survey-panel" data-survey-panel hidden>
+          <h3>User Requirement Survey</h3>
+          <p class="survey-note">Help MochiMind understand user needs. Your answer is used for admin summary only.</p>
+
+          <label>
+            <span>Age Group</span>
+            <select name="ageGroup" required>
+              <option value="">Choose age group</option>
+              <option>Below 18 years old</option>
+              <option>18-25 years old</option>
+              <option>26-35 years old</option>
+              <option>36-45 years old</option>
+              <option>46 years old and above</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Gender</span>
+            <select name="gender" required>
+              <option value="">Choose gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Prefer not to say</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Occupation</span>
+            <select name="occupation" required>
+              <option value="">Choose occupation</option>
+              <option>Student</option>
+              <option>Employed</option>
+              <option>Self-employed</option>
+              <option>Unemployed</option>
+              <option>Retired</option>
+            </select>
+          </label>
+
+          <fieldset>
+            <legend>Have you ever experienced emotional struggles or mental health challenges?</legend>
+            <label><input type="radio" name="experiencedChallenges" value="Yes" required> Yes</label>
+            <label><input type="radio" name="experiencedChallenges" value="No" required> No</label>
+          </fieldset>
+
+          <fieldset>
+            <legend>What types of problems have you faced?</legend>
+            <label><input type="checkbox" name="problems" value="Financial problem"> Financial problem</label>
+            <label><input type="checkbox" name="problems" value="Economic problem"> Economic problem</label>
+            <label><input type="checkbox" name="problems" value="Job or workplace problem"> Job or workplace problem</label>
+            <label><input type="checkbox" name="problems" value="Health problem"> Health problem</label>
+            <label><input type="checkbox" name="problems" value="Family problem"> Family problem</label>
+            <label><input type="checkbox" name="problems" value="Education problem"> Education problem</label>
+            <label><input type="checkbox" name="problems" value="Relationship problem"> Relationship problem</label>
+            <label><input type="checkbox" name="problems" value="Other problems"> Other problems</label>
+          </fieldset>
+
+          <p class="survey-status" data-survey-status></p>
+          <div class="survey-actions">
+            <button class="profile-save" type="submit">Submit Survey</button>
+            <button class="button muted" type="button" data-dismiss-survey>Maybe Later</button>
+          </div>
+        </form>
         <form class="profile-edit-panel" data-profile-edit-panel hidden>
           <h3>Edit Profile</h3>
           <label>
